@@ -1,0 +1,530 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+<li><a href="#Fields">Fields</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>crontab</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>crontab</code></h1>
+<p><pre>
+ crontab.lua: stores crons, determines next occurrence of cron
+ This file is a part of lua-crontab library
+ Copyright (c) 2010-2021 lua-crontab authors
+ See file `COPYRIGHT` for the license
+ </pre></p>
+<p> <pre>
+ Crontab format ("hash"):
+<p> {
+   s    = "*";
+   m    = "*";
+   h    = "*";
+   dom  = "*";
+   mon  = "*";
+   dow  = "*";
+   data = any;
+ }
+<p> Alternative crontab format ("array"):
+<p> "*","*","*","*","*","*", data
+  ^   ^   ^   ^   ^   ^     ^
+  |   |   |   |   |   |     |
+  |   |   |   |   |   |     +----- custom data, optional
+  |   |   |   |   |   +----------- day of week (0 - 6) (Sunday=0)
+  |   |   |   |   +--------------- month (1 - 12)
+  |   |   |   +------------------- day of month (1 - 31)
+  |   |   +----------------------- hour (0 - 23)
+  |   +--------------------------- min (0 - 59)
+  +------------------------------- sec (0 - 59)
+<p> Cron table is a bit complex thing, but we support only few things
+ (see http://en.wikipedia.org/wiki/CRON_expression for full description)
+<p> +-----------------------------------------------------+
+ |    FIELD     |     VALUES      | SPECIAL CHARACTERS |
+ +--------------+-----------------+--------------------+
+ | Seconds      | 0-59            |       , - *        |
+ | Minutes      | 0-59            |       , - *        |
+ | Hours        | 0-23            |       , - *        |
+ | Day of month | 1-31            |       , - *        |
+ | Month        | 1-12 or JAN-DEC |       , - *        |
+ | Day of week  | 0-6 or SUN-SAT  |       , - *        |
+ +-----------------------------------------------------+
+<p> </pre>
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#cron:get_next_occurrence">cron:get_next_occurrence (base_time)</a></td>
+	<td class="summary">Returns a timestamp of the next occurrence based on the cron instance cron
+ properties and the 'base_time' timestamp as starting point</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#cron:get_next_occurrence_till">cron:get_next_occurrence_till (base_timestamp, end_timestamp)</a></td>
+	<td class="summary">Returns a timestamp of the next occurrence based on the cron instance cron
+ properties, 'base_timestamp' and 'end_timestamp'</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_next_occurrence_getter">make_next_occurrence_getter (cron_properties)</a></td>
+	<td class="summary">Makes the cron instance from cron properties</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_cron_properties">make_cron_properties (raw_cron_data)</a></td>
+	<td class="summary">Prepares cron properties from raw cron data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_raw_cron_data_from_string">make_raw_cron_data_from_string (cron_rule_string[, data[, as_hash]])</a></td>
+	<td class="summary">Parses the 'cron_rule_string' string argument and returns raw cron data
+ table</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#make_crontab">make_crontab (raw_crontab_data)</a></td>
+	<td class="summary">Makes a crontab from raw crontab data</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#cron_properties_struct">cron_properties_struct</a></td>
+	<td class="summary">Cron properties</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#raw_cron_data_struct_hash">raw_cron_data_struct_hash</a></td>
+	<td class="summary">Raw cron data as hash array</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#raw_cron_data_struct_linear">raw_cron_data_struct_linear</a></td>
+	<td class="summary">Raw cron data as linear array</td>
+	</tr>
+</table>
+<h2><a href="#Fields">Fields</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#cron.data">cron.data</a></td>
+	<td class="summary">cron custom data from cron properties</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "cron:get_next_occurrence"></a>
+    <strong>cron:get_next_occurrence (base_time)</strong>
+    </dt>
+    <dd>
+    Returns a timestamp of the next occurrence based on the cron instance cron
+ properties and the 'base_time' timestamp as starting point
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">base_time</span>
+            <span class="types"><span class="type">unix-timestamp</span></span>
+         start point from which the
+ occurrence is calculated
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">unix-timestamp</span></span>
+        timestamp of the found occurrence or nil if not
+ found
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "cron:get_next_occurrence_till"></a>
+    <strong>cron:get_next_occurrence_till (base_timestamp, end_timestamp)</strong>
+    </dt>
+    <dd>
+    Returns a timestamp of the next occurrence based on the cron instance cron
+ properties, 'base_timestamp' and 'end_timestamp'
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">base_timestamp</span>
+            <span class="types"><span class="type">unix-timestamp</span></span>
+         start point from which the
+ occurrence is calculated
+        </li>
+        <li><span class="parameter">end_timestamp</span>
+            <span class="types"><span class="type">unix-timestamp</span></span>
+         end point till which the
+ occurrence is calculated. After that time point the occurrences will
+ be nil.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">unix-timestamp</span></span>
+        timestamp of the found occurrence or nil if not
+ found
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "make_next_occurrence_getter"></a>
+    <strong>make_next_occurrence_getter (cron_properties)</strong>
+    </dt>
+    <dd>
+    Makes the cron instance from cron properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cron_properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         cron properties table
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        cron instance, see cron.* functions
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#cron_properties_struct">cron_properties_struct</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "make_cron_properties"></a>
+    <strong>make_cron_properties (raw_cron_data)</strong>
+    </dt>
+    <dd>
+    Prepares cron properties from raw cron data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">raw_cron_data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         raw cron data table
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        cron properties
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#raw_cron_data_struct_linear">raw_cron_data_struct_linear</a></li>
+         <li><a href="index.html#raw_cron_data_struct_hash">raw_cron_data_struct_hash</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "make_raw_cron_data_from_string"></a>
+    <strong>make_raw_cron_data_from_string (cron_rule_string[, data[, as_hash]])</strong>
+    </dt>
+    <dd>
+    Parses the 'cron_rule_string' string argument and returns raw cron data
+ table
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">cron_rule_string</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         (required)
+        </li>
+        <li><span class="parameter">data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Custom data associated with the rule,
+ default=nil
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">as_hash</span>
+            <span class="types"><span class="type">boolean</span></span>
+         return table as hash table
+ instead of linear array, default=false
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        raw cron data table
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#raw_cron_data_struct_linear">raw_cron_data_struct_linear</a></li>
+         <li><a href="index.html#raw_cron_data_struct_hash">raw_cron_data_struct_hash</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "make_crontab"></a>
+    <strong>make_crontab (raw_crontab_data)</strong>
+    </dt>
+    <dd>
+    Makes a crontab from raw crontab data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">raw_crontab_data</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         raw crontab data table
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        array of cron properties
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="index.html#raw_cron_data_struct_linear">raw_cron_data_struct_linear</a></li>
+         <li><a href="index.html#raw_cron_data_struct_hash">raw_cron_data_struct_hash</a></li>
+         <li><a href="index.html#cron_properties_struct">cron_properties_struct</a></li>
+    </ul>
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "cron_properties_struct"></a>
+    <strong>cron_properties_struct</strong>
+    </dt>
+    <dd>
+    Cron properties
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">seconds</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible second values
+        </li>
+        <li><span class="parameter">minutes</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible minute values
+        </li>
+        <li><span class="parameter">hours</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible hour values
+        </li>
+        <li><span class="parameter">days</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible day values
+        </li>
+        <li><span class="parameter">months</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible month values
+        </li>
+        <li><span class="parameter">days_of_week</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table/number/nil</a></span>
+         possible day_of_week values
+        </li>
+        <li><span class="parameter">data</span>
+            <span class="types"><span class="type">any</span></span>
+         custom data
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "raw_cron_data_struct_hash"></a>
+    <strong>raw_cron_data_struct_hash</strong>
+    </dt>
+    <dd>
+    Raw cron data as hash array
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         seconds rule
+        </li>
+        <li><span class="parameter">m</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         minutes rule
+        </li>
+        <li><span class="parameter">h</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         hours rule
+        </li>
+        <li><span class="parameter">dom</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         days rule
+        </li>
+        <li><span class="parameter">mon</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         months rule
+        </li>
+        <li><span class="parameter">dow</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         days_of_week rule
+        </li>
+        <li><span class="parameter">data</span>
+            <span class="types"><span class="type">any</span></span>
+         custom data
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "raw_cron_data_struct_linear"></a>
+    <strong>raw_cron_data_struct_linear</strong>
+    </dt>
+    <dd>
+    Raw cron data as linear array
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">1</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         seconds rule
+        </li>
+        <li><span class="parameter">2</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         minutes rule
+        </li>
+        <li><span class="parameter">3</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         hours rule
+        </li>
+        <li><span class="parameter">4</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         days rule
+        </li>
+        <li><span class="parameter">5</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         months rule
+        </li>
+        <li><span class="parameter">6</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         days_of_week rule
+        </li>
+        <li><span class="parameter">7</span>
+            <span class="types"><span class="type">any</span></span>
+         custom data
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Fields"></a>Fields</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "cron.data"></a>
+    <strong>cron.data</strong>
+    </dt>
+    <dd>
+    cron custom data from cron properties
+
+
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-12-09 16:05:36 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
