@@ -714,6 +714,15 @@ end
 
 return
 {
+  _VERSION = '1.0.0';
+  _URL = 'https://github.com/logiceditor-com/lua-crontab';
+  _COPYRIGHT = 'Copyright (c) 2010-2021 lua-crontab authors';
+  _LICENSE = 'MIT (http://raw.githubusercontent.com/'
+    .. 'logiceditor-com/lua-crontab/master/COPYRIGHT)';
+  _DESCRIPTION = 'stores crons, determines next occurrence of cron';
+
+  --
+
   make_crontab = make_crontab; -- crontab contains cron_properties
   make_cron_properties = make_cron_properties;
   make_raw_cron_data_from_string = make_raw_cron_data_from_string;
