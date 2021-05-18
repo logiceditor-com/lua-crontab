@@ -48,7 +48,8 @@ source = {
 description = {
    summary = "stores crons, determines next occurrence of cron",
    homepage = "http://github.com/logiceditor-com/lua-crontab",
-   license = "MIT/X11"
+   license = "MIT/X11",
+   maintainer = "LogicEditor Team <team@logiceditor.com>"
 }
 dependencies = {
    "lua-nucleo >= 1.1.0",
