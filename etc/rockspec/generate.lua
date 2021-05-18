@@ -61,12 +61,13 @@ build = {
 
 for i = 1, #files do
   local name = files[i]
+  local module_id = name:gsub('/', '.'):gsub('\\', '.'):gsub('%.lua$', '')
+  if module_id == 'crontab.crontab' then
+    module_id = 'lua-crontab'
+  end
   io.stdout:write([[
-         []] .. (
-          ("%q"):format(
-              name:gsub("/", "."):gsub("\\", "."):gsub("%.lua$", "")
-            )
-        ) .. [[] = ]] .. (("%q"):format(name)) .. [[;
+         []] .. ('%q'):format(module_id)
+             .. [[] = ]] .. (("%q"):format(name)) .. [[;
 ]])
 end
 
