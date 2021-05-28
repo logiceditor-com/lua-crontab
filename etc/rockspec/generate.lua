@@ -46,7 +46,8 @@ source = {
    branch = "]] .. branch .. [["
 }
 description = {
-   summary = "stores crons, determines next occurrence of cron",
+   summary = "Stores crontab-like rules for events and calculates timestamps "
+          .. "for their occurrences",
    homepage = "http://github.com/logiceditor-com/lua-crontab",
    license = "MIT/X11",
    maintainer = "LogicEditor Team <team@logiceditor.com>"
