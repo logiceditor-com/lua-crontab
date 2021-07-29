@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 -- <pre>
--- crontab.lua: stores crons, determines next occurrence of cron
+-- crontab.lua: Stores crontab-like rules for events and calculates timestamps
+-- for their occurrences
 -- This file is a part of lua-crontab library
 -- Copyright (c) 2010-2021 lua-crontab authors
 -- See file `COPYRIGHT` for the license
@@ -719,7 +720,8 @@ return
   _COPYRIGHT = 'Copyright (c) 2010-2021 lua-crontab authors';
   _LICENSE = 'MIT (http://raw.githubusercontent.com/'
     .. 'logiceditor-com/lua-crontab/master/COPYRIGHT)';
-  _DESCRIPTION = 'stores crons, determines next occurrence of cron';
+  _DESCRIPTION = 'Stores crontab-like rules for events and calculates '
+              .. 'timestamps for their occurrences';
 
   --
 

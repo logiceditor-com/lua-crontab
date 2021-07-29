@@ -1,8 +1,8 @@
 package = "lua-crontab"
-version = "1.0.0-1"
+version = "scm-1"
 source = {
    url = "git://github.com/logiceditor-com/lua-crontab.git",
-   branch = "v1.0.0"
+   branch = "master"
 }
 description = {
    summary = "Stores crontab-like rules for events and calculates timestamps "
